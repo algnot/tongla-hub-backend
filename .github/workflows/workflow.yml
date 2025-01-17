@@ -1,0 +1,50 @@
+name: Deployment Workflow
+
+on: [push]
+
+jobs:
+
+  Deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script_stop: true
+          debug: true
+          command_timeout: 200m
+          script: |
+            cd tongla-hub-backend
+            git fetch --all 
+            git reset --hard origin/main 
+
+            cat > .env << EOF
+            FLASK_RUN_PORT=9000
+            FLASK_RUN_HOST=0.0.0.0
+            FLASK_RUN_DEBUG=true
+            
+            APP_PORT=80
+            APP_VERSION=${{ github.sha }}
+            APP_ENV=production
+            
+            DATABASE_HOST=mysql
+            DATABASE_PORT=3306
+            DATABASE_USERNAME=root
+            DATABASE_PASSWORD=root
+            DATABASE_NAME=tongla-hub
+            
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+
+            EOF
+
+            docker image prune -a -f
+            docker compose down --volumes
+            docker compose up --build -d
+            docker ps
+            echo "Deploy completed!"

@@ -1,0 +1,32 @@
+
+services:
+  mysql:
+    image: mysql:latest
+    volumes:
+      - mysql-data:/var/lib/mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: tongla-hub
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+
+  server:
+    build:
+      context: .
+    env_file:
+      - ./.env
+    ports:
+      - "${SERVER_PORT:-9000}:9000"
+    depends_on:
+      - mysql
+    volumes:
+      - ./model:/mnt/model
+      - ./router:/mnt/router
+      - ./util:/mnt/util
+      - ./alembic:/mnt/alembic
+      - ./app.py:/mnt/app.py
+
+volumes:
+  mysql-data:
