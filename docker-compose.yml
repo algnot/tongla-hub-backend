@@ -27,6 +27,9 @@ services:
       - ./util:/mnt/util
       - ./alembic:/mnt/alembic
       - ./app.py:/mnt/app.py
+      - ./rsa_private_key.pem:/mnt/rsa_private_key.pem
+      - ./rsa_public_key.json:/mnt/rsa_public_key.json
+      - ./secret_key.txt:/mnt/secret_key.txt
 
 volumes:
   mysql-data:
