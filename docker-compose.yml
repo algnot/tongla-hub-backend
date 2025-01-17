@@ -18,7 +18,7 @@ services:
     env_file:
       - ./.env
     ports:
-      - "${SERVER_PORT:-9000}:9000"
+      - "${APP_PORT:-9000}:9000"
     depends_on:
       - mysql
     volumes:
