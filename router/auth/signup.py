@@ -14,6 +14,11 @@ sign_in_app = Blueprint("sign_in", __name__)
 def sign_up():
     payload = request.get_json()
 
+    find_user = User().filter(filters=[("email", "=", encrypt(payload["email"]))])
+
+    if len(find_user) > 0:
+        raise ValidationError(f"user with email {payload['email']} already exists")
+
     user = User()
     user.username = payload["username"]
     user.email = payload["email"]
