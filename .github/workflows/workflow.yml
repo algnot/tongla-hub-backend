@@ -44,7 +44,6 @@ jobs:
             EOF
 
             docker image prune -a -f
-            docker compose down --volumes
             docker compose up --build -d
             docker ps
             echo "Deploy completed!"
