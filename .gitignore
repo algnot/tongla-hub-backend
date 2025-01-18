@@ -156,7 +156,7 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 secret_key.txt
-rsa_private_key.pem
-rsa_public_key.json
-firebase_secret.json
+/secret/rsa_private_key.pem
+/secret/rsa_public_key.json
+/secret/firebase_secret.json
 .idea
