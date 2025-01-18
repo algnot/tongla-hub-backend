@@ -20,6 +20,7 @@ jobs:
           debug: true
           command_timeout: 200m
           script: |
+            chmod -R 777 ./tongla-hub-backend
             cd tongla-hub-backend
             git fetch --all 
             git reset --hard origin/main 
