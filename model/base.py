@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, and_, QueuePool
+from sqlalchemy import create_engine, and_, QueuePool, or_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from util.encryptor import encrypt, decrypt
@@ -108,22 +108,48 @@ class Base(BaseClass):
         self.close_connection()
         return record
 
-    def filter(self, filters, limit=1000):
+    def filter(self, filters=None, limit=1000):
+        if filters is None:
+            filters = []
+
         self.create_new_session()
         filter_query = []
-        for field, condition, value in filters:
-            if condition == "ilike":
-                filter_query.append(getattr(self.__class__, field).ilike(f"%{value}%"))
-            elif condition == "<=":
-                filter_query.append(getattr(self.__class__, field) <= value)
-            elif condition == ">=":
-                filter_query.append(getattr(self.__class__, field) >= value)
-            elif condition == "in":
-                filter_query.append(getattr(self.__class__, field).in_(value))
-            else:
-                filter_query.append(getattr(self.__class__, field) == value)
+        current_conditions = []
+        or_conditions = []
 
-        records = self.query.filter(and_(*filter_query)).limit(limit).all()
+        for condition in filters:
+            if condition == "or":
+                if current_conditions:
+                    or_conditions.append(current_conditions)
+                current_conditions = []
+            elif condition == "and":
+                continue
+            else:
+                field, condition_operator, value = condition
+                if condition_operator == "ilike":
+                    current_conditions.append(getattr(self.__class__, field).ilike(f"%{value}%"))
+                elif condition_operator == "<=":
+                    current_conditions.append(getattr(self.__class__, field) <= value)
+                elif condition_operator == ">=":
+                    current_conditions.append(getattr(self.__class__, field) >= value)
+                elif condition_operator == "<":
+                    current_conditions.append(getattr(self.__class__, field) < value)
+                elif condition_operator == ">":
+                    current_conditions.append(getattr(self.__class__, field) > value)
+                elif condition_operator == "in":
+                    current_conditions.append(getattr(self.__class__, field).in_(value))
+                else:
+                    current_conditions.append(getattr(self.__class__, field) == value)
+
+        if current_conditions:
+            or_conditions.append(current_conditions)
+
+        if or_conditions:
+            filter_query = or_(*[and_(*group) for group in or_conditions])
+        else:
+            filter_query = and_(*filter_query)
+
+        records = self.query.filter(filter_query).limit(limit).all()
         result_list = []
 
         for record in records:
