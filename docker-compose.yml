@@ -8,7 +8,7 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: tongla-hub
+      MYSQL_DATABASE: "tongla-hub"
       MYSQL_ROOT_PASSWORD: root
       MYSQL_PASSWORD: root
 
@@ -21,6 +21,7 @@ services:
       - "${APP_PORT:-9000}:9000"
     depends_on:
       - mysql
+    restart: always
     volumes:
       - ./model:/mnt/model
       - ./router:/mnt/router
