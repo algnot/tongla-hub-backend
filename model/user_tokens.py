@@ -75,7 +75,7 @@ class UserTokens(Base):
             return self._load_signing_key()
 
     def _load_verifying_key(self):
-        with open('rsa_public_key.json', 'r') as fh:
+        with open('./secret/rsa_public_key.json', 'r') as fh:
             return jwk_from_dict(json.load(fh))
 
     def _generate_refresh_token(self):
