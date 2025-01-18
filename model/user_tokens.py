@@ -68,14 +68,14 @@ class UserTokens(Base):
 
     def _load_signing_key(self):
         try:
-            with open("rsa_private_key.pem", "rb") as fh:
+            with open(__path__ + "../secret/rsa_private_key.pem", "rb") as fh:
                 return jwk_from_pem(fh.read())
         except FileNotFoundError:
             generate_rsa_keys()
             return self._load_signing_key()
 
     def _load_verifying_key(self):
-        with open('./secret/rsa_public_key.json', 'r') as fh:
+        with open(__path__ + '../secret/rsa_public_key.json', 'r') as fh:
             return jwk_from_dict(json.load(fh))
 
     def _generate_refresh_token(self):
