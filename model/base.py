@@ -188,6 +188,18 @@ class Base(BaseClass):
         self.close_connection()
         return result_list
 
+    def unlink(self):
+        try:
+            self.create_new_session()
+            self.session.delete(self)
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise e
+        finally:
+            self.close_connection()
+
+
     def __del__(self):
         self.close_connection()
 

@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 
+from model.question import Question
 from model.users import RoleType, User
 from model.email import Email
 from model.one_time_password import OneTimePassword
@@ -14,7 +15,9 @@ mapper = {
         "offset": "id",
         "filter": ["username", "email"],
         "filter_operator": "=",
-        "role": RoleType.ADMIN,
+        "additional_filter": [],
+        "additional_order": [],
+        "role": [RoleType.ADMIN],
         "mapper_key": ["uid", "username", "email", "role", "image_url"],
         "mapper_value": ["id", "username", "email", "role.name", "image_url"],
         "need_encrypt": True,
@@ -24,7 +27,9 @@ mapper = {
         "offset": "id",
         "filter": ["to_email"],
         "filter_operator": "=",
-        "role": RoleType.ADMIN,
+        "additional_filter": [],
+        "additional_order": [],
+        "role": [RoleType.ADMIN],
         "mapper_key": ["id", "to_email", "template_id", "status", "reason", "send_at"],
         "mapper_value": ["id", "to_email", "template_id", "status", "reason", "send_at"],
         "need_encrypt": True,
@@ -34,9 +39,23 @@ mapper = {
         "offset": "id",
         "filter": ["ref"],
         "filter_operator": "ilike",
-        "role": RoleType.ADMIN,
+        "additional_filter": [],
+        "additional_order": [],
+        "role": [RoleType.ADMIN],
         "mapper_key": ["id", "ref", "code", "used", "expires_at"],
         "mapper_value": ["id", "ref", "code", "used", "expires_at"],
+        "need_encrypt": False,
+    },
+    "question": {
+        "model": Question,
+        "offset": "id",
+        "filter": ["title", "description"],
+        "filter_operator": "ilike",
+        "additional_filter": [("is_public", "=", True)],
+        "additional_order": [("rate", "asc")],
+        "role": [RoleType.USER, RoleType.ADMIN],
+        "mapper_key": ["id", "title", "rate", "is_system_question", "is_public", "submitted", "commented", "created_at"],
+        "mapper_value": ["id", "title", "rate", "is_system_question", "is_public", "submitted", "commented", "created_at"],
         "need_encrypt": False,
     }
 }
@@ -63,8 +82,8 @@ def list_data():
     if model not in mapper.keys():
         raise Exception("model is not in mapper")
 
-    if user.role != mapper[model]["role"]:
-        raise Exception("users do not have admin role")
+    if user.role not in mapper[model]["role"]:
+        raise Exception("users do not have permission")
 
     filter_list = []
     if offset:
@@ -85,7 +104,13 @@ def list_data():
             if index < len(filters_base) - 1:
                 filter_list.append("or")
 
-    datas = mapper[model]["model"]().filter(filters=filter_list, limit=limit + 1, order_by=[(mapper[model]["offset"], "desc")])
+    filter_list.extend(mapper[model]["additional_filter"])
+
+    order_by_list = []
+    order_by_list.extend(mapper[model]["additional_order"])
+    order_by_list.append((mapper[model]["offset"], "desc"))
+
+    datas = mapper[model]["model"]().filter(filters=filter_list, limit=limit + 1, order_by=order_by_list)
     response = []
 
     for data in datas[:limit]:
