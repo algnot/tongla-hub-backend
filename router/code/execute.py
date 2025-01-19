@@ -23,7 +23,7 @@ def restrict_execution(code):
             if isinstance(node, ast.Import) or isinstance(node, ast.ImportFrom):
                 for alias in node.names:
                     if alias.name not in ALLOWED_MODULES:
-                        raise PermissionError(f"usage of '{alias.name}' is not allowed. allowed modules: {ALLOWED_MODULES}.")
+                        raise PermissionError(f"usage of '{alias.name}' is not allowed. allowed modules: {ALLOWED_MODULES}")
     except SyntaxError:
         pass
 
@@ -71,7 +71,7 @@ def execute():
     except PermissionError as e:
         return jsonify({
             "stdout": "",
-            "stderr": f"Permission error: {str(e)}. Are you hacker?",
+            "stderr": f"Permission error: {str(e)} Are you hacker?",
             "runtime": 0,
             "runtime_unit": "ms"
         })
