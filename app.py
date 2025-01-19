@@ -18,4 +18,4 @@ def _hc():
     return jsonify({"status": "server is running"})
 
 if __name__ == "__main__":
-    app.run()
+    app.run(threaded=True)
