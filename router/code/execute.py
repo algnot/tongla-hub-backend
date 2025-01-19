@@ -8,7 +8,7 @@ from util.request import handle_error, validate_request
 
 execute_app = Blueprint("execute_app", __name__)
 
-TIMEOUT_SECONDS = 20
+TIMEOUT_SECONDS = 10
 RESTRICTED_MODULES = ["os", "subprocess", "sys", "platform", "pathlib"]
 ALLOWED_MODULES = [
     "time", "math", "random", "string", "itertools", "collections", "functools", "operator",
