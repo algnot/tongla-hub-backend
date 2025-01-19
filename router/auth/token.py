@@ -12,7 +12,7 @@ def me():
 
     user_token = UserTokens()
     user_token.user_id = user.id
-    access_token = user_token._generate_access_token()
+    access_token = user_token.generate_access_token()
 
     return jsonify({
         "access_token": access_token

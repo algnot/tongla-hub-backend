@@ -19,6 +19,7 @@ rsa_public_key_path = os.path.join(BASE_DIR, "../secret/rsa_public_key.json")
 class TokenType(enum.Enum):
     ACCESS = 1
     REFRESH = 2
+    RESET_PASSWORD = 3
 
 def default_expiration_time():
     return datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=7)
@@ -36,7 +37,7 @@ class UserTokens(Base):
     revoked = Column(Boolean, default=False)
 
     def generate_token(self):
-        return self._generate_refresh_token(), self._generate_access_token()
+        return self.generate_refresh_token(), self.generate_access_token()
 
     def generate_jwt(self, expired_in, type: TokenType):
         message = {
@@ -85,7 +86,7 @@ class UserTokens(Base):
         with open(rsa_public_key_path, "r") as fh:
             return jwk_from_dict(json.load(fh))
 
-    def _generate_refresh_token(self):
+    def generate_refresh_token(self):
         expired_in = datetime.timedelta(days=14)
         refresh_token = UserTokens()
         refresh_token.create({
@@ -95,7 +96,7 @@ class UserTokens(Base):
         })
         return refresh_token.generate_jwt(expired_in=expired_in, type=TokenType.REFRESH)
 
-    def _generate_access_token(self):
+    def generate_access_token(self):
         expired_in = datetime.timedelta(minutes=20)
         access_token = UserTokens()
         access_token.create({
@@ -104,3 +105,13 @@ class UserTokens(Base):
             "type": TokenType.ACCESS
         })
         return access_token.generate_jwt(expired_in, type=TokenType.ACCESS)
+
+    def generate_reset_password_token(self, user_id):
+        expired_in = datetime.timedelta(minutes=30)
+        access_token = UserTokens()
+        access_token.create({
+            "user_id": user_id,
+            "expires_at": datetime.datetime.now(datetime.timezone.utc) + expired_in,
+            "type": TokenType.RESET_PASSWORD
+        })
+        return access_token.generate_jwt(expired_in, type=TokenType.RESET_PASSWORD)

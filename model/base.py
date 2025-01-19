@@ -49,7 +49,10 @@ class Base(BaseClass):
         self.session = session_maker()
         self.query = self.session.query(self.__class__)
 
-    def create(self, values: dict):
+    def create(self, values=None):
+        if values is None:
+            values = {}
+
         try:
             self.create_new_session()
 
@@ -73,7 +76,10 @@ class Base(BaseClass):
             self.session.rollback()
             raise e
 
-    def update(self, values: dict):
+    def update(self, values=None):
+        if values is None:
+            values = {}
+
         try:
             self.create_new_session()
 

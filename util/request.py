@@ -46,6 +46,29 @@ def get_user_from_token(token: str, token_type=TokenType.ACCESS):
 
     return payload
 
+def handle_token(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        auth_header = request.headers.get("Authorization")
+        if not auth_header:
+            return jsonify({"status": False, "message": "Authorization token missing"}), 403
+
+        token = auth_header.split(" ")[1] if len(auth_header.split(" ")) > 1 else None
+        if not token:
+            return jsonify({"status": False, "message": "Invalid token format"}), 403
+
+        try:
+            payload = UserTokens().verify_token(token)
+            user = User().get_by_id(payload["sub"]["user_id"])
+            request.user = user
+            request.token = payload
+        except Exception as e:
+            return jsonify({"status": False, "message": str(e)}), 403
+
+        return func(*args, **kwargs)
+
+    return wrapper
+
 def handle_access_token(func):
     @wraps(func)
     def wrapper(*args, **kwargs):

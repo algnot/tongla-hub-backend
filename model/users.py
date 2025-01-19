@@ -33,6 +33,11 @@ class User(Base):
             "hashed_password": hash_password(password)
         })
 
+    def change_password(self, password):
+        return self.update({
+            "hashed_password": hash_password(password)
+        })
+
     def generate_token(self):
         user_token = UserTokens()
         user_token.user_id = self.id
