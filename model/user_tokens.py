@@ -2,12 +2,19 @@ import datetime
 import enum
 import uuid
 import json
+import os
 from jwt.utils import get_int_from_datetime
 from sqlalchemy import Column, Integer, ForeignKey, TIMESTAMP, Boolean, Enum, String
 from sqlalchemy.orm import relationship
 from model.base import Base
 from jwt import JWT, jwk_from_pem, jwk_from_dict
 from util.encryptor import generate_rsa_keys
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+secret_key_path = os.path.join(BASE_DIR, "../secret/secret_key.txt")
+rsa_private_key_path = os.path.join(BASE_DIR, "../secret/rsa_private_key.pem")
+rsa_public_key_path = os.path.join(BASE_DIR, "../secret/rsa_public_key.json")
 
 class TokenType(enum.Enum):
     ACCESS = 1
@@ -68,14 +75,14 @@ class UserTokens(Base):
 
     def _load_signing_key(self):
         try:
-            with open(__path__ + "../secret/rsa_private_key.pem", "rb") as fh:
+            with open(rsa_private_key_path, "rb") as fh:
                 return jwk_from_pem(fh.read())
         except FileNotFoundError:
             generate_rsa_keys()
             return self._load_signing_key()
 
     def _load_verifying_key(self):
-        with open(__path__ + '../secret/rsa_public_key.json', 'r') as fh:
+        with open(rsa_public_key_path, "r") as fh:
             return jwk_from_dict(json.load(fh))
 
     def _generate_refresh_token(self):
