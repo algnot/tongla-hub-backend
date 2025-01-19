@@ -9,9 +9,6 @@ execute_app = Blueprint("execute_app", __name__)
 TIMEOUT_SECONDS = 20
 
 def restrict_execution():
-    os.setuid(1000)
-    os.setgid(1000)
-
     os.environ["PATH"] = "/usr/bin:/bin"
 
 @execute_app.route("/execute", methods=["POST"])
