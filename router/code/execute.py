@@ -23,7 +23,7 @@ def restrict_execution(code):
             if isinstance(node, ast.Import) or isinstance(node, ast.ImportFrom):
                 for alias in node.names:
                     if alias.name not in ALLOWED_MODULES:
-                        raise PermissionError(f"usage of '{alias.name}' is not allowed.")
+                        raise PermissionError(f"usage of '{alias.name}' is not allowed. allowed modules: {ALLOWED_MODULES}.")
     except SyntaxError:
         pass
 
