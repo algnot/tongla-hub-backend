@@ -1,14 +1,18 @@
 import subprocess
 import time
-import os
 from flask import Blueprint, jsonify, request
 from util.request import handle_error, validate_request
 
 execute_app = Blueprint("execute_app", __name__)
 
 TIMEOUT_SECONDS = 20
+RESTRICTED_MODULES = ["os", "subprocess", "sys", "platform"]
 
-def restrict_execution():
+def restrict_execution(code):
+    for module in RESTRICTED_MODULES:
+        if module in code:
+            raise PermissionError(f"Usage of '{module}' is not allowed.")
+
     os.environ["PATH"] = "/usr/bin:/bin"
 
 @execute_app.route("/execute", methods=["POST"])
@@ -22,7 +26,7 @@ def execute():
     start_time = time.time()
 
     try:
-        restrict_execution()
+        restrict_execution(code)
 
         process = subprocess.Popen(
             ['python3', '-c', code],
@@ -48,5 +52,12 @@ def execute():
             "stdout": "",
             "stderr": f"Error: Process timed out after {TIMEOUT_SECONDS} seconds.",
             "runtime": int(runtime * 1000),
+            "runtime_unit": "ms"
+        })
+    except PermissionError as e:
+        return jsonify({
+            "stdout": "",
+            "stderr": f"Permission error: {str(e)}",
+            "runtime": 0,
             "runtime_unit": "ms"
         })
