@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, and_, QueuePool, or_
+from sqlalchemy import create_engine, and_, QueuePool, or_, asc, desc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from util.encryptor import encrypt, decrypt
@@ -114,7 +114,7 @@ class Base(BaseClass):
         self.close_connection()
         return record
 
-    def filter(self, filters=None, limit=1000):
+    def filter(self, filters=None, limit=1000, order_by=None):
         if filters is None:
             filters = []
 
@@ -155,7 +155,28 @@ class Base(BaseClass):
         else:
             filter_query = and_(*filter_query)
 
-        records = self.query.filter(filter_query).limit(limit).all()
+        if order_by:
+            if isinstance(order_by, list):
+                order_criteria = []
+                for order_item in order_by:
+                    if isinstance(order_item, tuple) and len(order_item) == 2:
+                        field, direction = order_item
+                        if direction.lower() == "desc":
+                            order_criteria.append(desc(getattr(self.__class__, field)))
+                        else:
+                            order_criteria.append(asc(getattr(self.__class__, field)))
+                    else:
+                        order_criteria.append(asc(getattr(self.__class__, order_item)))
+            else:
+                order_criteria = [asc(getattr(self.__class__, order_by))]
+        else:
+            order_criteria = []
+
+        query = self.query.filter(filter_query)
+        if order_criteria:
+            query = query.order_by(*order_criteria)
+
+        records = query.limit(limit).all()
         result_list = []
 
         for record in records:

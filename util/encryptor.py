@@ -48,14 +48,20 @@ def generate_rsa_keys():
         json.dump(json.loads(public_key_jwk.export_public()), json_file, indent=4)
 
 def encrypt(original_string: str) -> bytes:
-    key = get_secret_key()
-    ciper = Fernet(key)
-    return ciper._encrypt_from_parts(original_string.encode(), 0, key[:16])
+    try:
+        key = get_secret_key()
+        ciper = Fernet(key)
+        return ciper._encrypt_from_parts(original_string.encode(), 0, key[:16])
+    except Exception as error:
+        return b""
 
 def decrypt(encrypted_string:bytes) -> str:
-    key = get_secret_key()
-    ciper = Fernet(key)
-    return ciper.decrypt(encrypted_string).decode()
+    try:
+        key = get_secret_key()
+        ciper = Fernet(key)
+        return ciper.decrypt(encrypted_string).decode()
+    except Exception as error:
+        return "error decrypted"
 
 def hash_password(password: str) -> bytes:
     salt = bcrypt.gensalt()
