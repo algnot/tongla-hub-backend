@@ -11,7 +11,7 @@ RESTRICTED_MODULES = ["os", "subprocess", "sys", "platform"]
 def restrict_execution(code):
     for module in RESTRICTED_MODULES:
         if module in code:
-            raise PermissionError(f"Usage of '{module}' is not allowed.")
+            raise PermissionError(f"usage of '{module}' is not allowed.")
 
     os.environ["PATH"] = "/usr/bin:/bin"
 
