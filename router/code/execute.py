@@ -7,7 +7,7 @@ from util.request import handle_error, validate_request
 execute_app = Blueprint("execute_app", __name__)
 
 TIMEOUT_SECONDS = 20
-RESTRICTED_MODULES = ["os", "subprocess", "sys", "platform"]
+RESTRICTED_MODULES = ["os", "subprocess", "sys", "platform", "pathlib"]
 
 def restrict_execution(code):
     for module in RESTRICTED_MODULES:
