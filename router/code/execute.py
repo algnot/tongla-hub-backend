@@ -50,14 +50,14 @@ def execute():
         runtime = time.time() - start_time
         return jsonify({
             "stdout": "",
-            "stderr": f"Error: Process timed out after {TIMEOUT_SECONDS} seconds.",
+            "stderr": f"Error: process timed out after {TIMEOUT_SECONDS} seconds.",
             "runtime": int(runtime * 1000),
             "runtime_unit": "ms"
         })
     except PermissionError as e:
         return jsonify({
             "stdout": "",
-            "stderr": f"Permission error: {str(e)}",
+            "stderr": f"Permission error: {str(e)}. Are you hacker?",
             "runtime": 0,
             "runtime_unit": "ms"
         })
