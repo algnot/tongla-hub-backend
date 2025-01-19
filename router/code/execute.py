@@ -10,6 +10,10 @@ execute_app = Blueprint("execute_app", __name__)
 
 TIMEOUT_SECONDS = 20
 RESTRICTED_MODULES = ["os", "subprocess", "sys", "platform", "pathlib"]
+ALLOWED_MODULES = [
+    "time", "math", "random", "string", "itertools", "collections", "functools", "operator",
+    "decimal", "fractions", "datetime", "json", "re", "uuid", "bisect", "heapq", "copy"
+]
 
 def restrict_execution(code):
     try:
@@ -18,7 +22,7 @@ def restrict_execution(code):
         for node in ast.walk(tree):
             if isinstance(node, ast.Import) or isinstance(node, ast.ImportFrom):
                 for alias in node.names:
-                    if alias.name in RESTRICTED_MODULES:
+                    if alias.name not in ALLOWED_MODULES:
                         raise PermissionError(f"usage of '{alias.name}' is not allowed.")
     except SyntaxError:
         pass
@@ -60,7 +64,7 @@ def execute():
         runtime = time.time() - start_time
         return jsonify({
             "stdout": "",
-            "stderr": f"Error: process timed out after {TIMEOUT_SECONDS} seconds.",
+            "stderr": f"Timeout Error: process timed out after {TIMEOUT_SECONDS} seconds.",
             "runtime": int(runtime * 1000),
             "runtime_unit": "ms"
         })
