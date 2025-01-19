@@ -1,6 +1,7 @@
 import subprocess
 import time
 import os
+import ast
 from flask import Blueprint, jsonify, request
 from util.request import handle_error, validate_request
 
@@ -9,10 +10,18 @@ execute_app = Blueprint("execute_app", __name__)
 TIMEOUT_SECONDS = 20
 RESTRICTED_MODULES = ["os", "subprocess", "sys", "platform", "pathlib"]
 
+
 def restrict_execution(code):
-    for module in RESTRICTED_MODULES:
-        if module in code:
-            raise PermissionError(f"usage of '{module}' is not allowed.")
+    try:
+        tree = ast.parse(code)
+
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import) or isinstance(node, ast.ImportFrom):
+                for alias in node.names:
+                    if alias.name in RESTRICTED_MODULES:
+                        raise PermissionError(f"usage of '{alias.name}' is not allowed.")
+    except SyntaxError:
+        pass
 
     os.environ["PATH"] = "/usr/bin:/bin"
 
