@@ -9,7 +9,7 @@ add_quest_app = Blueprint("add_quest_app", __name__)
 
 @add_quest_app.route("/add-question", methods=["POST"])
 @handle_access_token
-@validate_request(["title", "description", "start_code", "test_cases"])
+@validate_request(["title", "description", "start_code", "answer_code", "test_cases"])
 @handle_error
 def add_question():
     user = request.user
@@ -25,6 +25,7 @@ def add_question():
         "start_code": payload["start_code"],
         "owner_id": user.id,
         "rate": payload.get("rate", 1),
+        "answer_code": payload["answer_code"],
     }
 
     if user.role == RoleType.ADMIN:
@@ -54,6 +55,7 @@ def add_question():
         "title": question.title,
         "description": question.description,
         "start_code": question.start_code,
+        "answer_code": question.answer_code,
         "rate": question.rate,
         "owner": {
             "username": user.username,

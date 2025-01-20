@@ -11,6 +11,7 @@ class Question(Base):
     title = Column(TEXT, nullable=False)
     description = Column(TEXT, nullable=False)
     start_code = Column(TEXT, nullable=True)
+    answer_code = Column(TEXT, nullable=True)
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     owner = relationship("User")
     test_cases = relationship("TestCase", back_populates="question", cascade="all, delete-orphan")

@@ -10,7 +10,7 @@ update_quest_app = Blueprint("update_quest_app", __name__)
 
 @update_quest_app.route("/update-question", methods=["PUT"])
 @handle_access_token
-@validate_request(["id", "title", "description", "start_code", "test_cases"])
+@validate_request(["id", "title", "description", "start_code", "answer_code", "test_cases"])
 @handle_error
 def add_question():
     user = request.user
@@ -35,6 +35,7 @@ def add_question():
         "start_code": payload["start_code"],
         "owner_id": user.id,
         "rate": payload.get("rate", 1),
+        "answer_code": payload["answer_code"],
     }
 
     if user.role == RoleType.ADMIN:
@@ -69,6 +70,7 @@ def add_question():
         "title": exiting_question.title,
         "description": exiting_question.description,
         "start_code": exiting_question.start_code,
+        "answer_code": exiting_question.answer_code,
         "rate": exiting_question.rate,
         "owner": {
             "username": owner.username,
