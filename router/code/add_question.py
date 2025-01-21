@@ -58,6 +58,7 @@ def add_question():
         "answer_code": question.answer_code,
         "rate": question.rate,
         "owner": {
+            "id": user.id,
             "username": user.username,
         },
         "is_system_question": question.is_system_question,

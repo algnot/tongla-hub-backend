@@ -26,7 +26,7 @@ def get_question():
     owner = User().filter([("id", "=", exiting_question.owner_id)], limit=1)[0]
 
     answer_code = "******"
-    if user.role != RoleType.ADMIN and exiting_question.owner_id != user.id:
+    if user.role == RoleType.ADMIN or exiting_question.owner_id == user.id:
         answer_code = exiting_question.answer_code
 
     test_case_response = []
@@ -46,6 +46,7 @@ def get_question():
         "start_code": exiting_question.start_code,
         "rate": exiting_question.rate,
         "owner": {
+            "id": owner.id,
             "username": owner.username,
         },
         "is_system_question": exiting_question.is_system_question,
