@@ -47,6 +47,8 @@ jobs:
             
             JWT_SECRET=${{ secrets.JWT_SECRET }}
             
+            RABBITMQ_HOST=${{ secrets.RABBITMQ_HOST }}
+            RABBITMQ_POST=${{ secrets.RABBITMQ_POST }}
             RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
             RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
 
