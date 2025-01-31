@@ -1,9 +1,12 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 
+from consumer.init import init_consumer
 from router.auth.auth import auth_app
 from router.code.code import code_app
 from router.data.data import data_app
+from util.config import get_config
+from util.consumer import Consumer
 
 app = Flask(__name__)
 CORS(app)
@@ -17,4 +20,10 @@ def _hc():
     return jsonify({"status": "server is running"})
 
 if __name__ == "__main__":
-    app.run(threaded=True)
+    server_mode = get_config("SERVICE_NAME", "tongla-hub-server")
+    if server_mode == "tongla-hub-server":
+        app.run(threaded=True)
+    elif server_mode == "tongla-hub-consumer":
+        init_consumer()
+    else:
+        raise RuntimeError("unknown server mode")

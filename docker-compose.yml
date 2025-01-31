@@ -27,6 +27,24 @@ services:
       - ./alembic:/mnt/alembic
       - ./app.py:/mnt/app.py
       - ./secret:/mnt/secret
+    environment:
+      SERVICE_NAME: "tongla-hub-server"
+
+  consumer:
+    build:
+      context: .
+    env_file:
+      - ./.env
+    restart: always
+    volumes:
+      - ./model:/mnt/model
+      - ./router:/mnt/router
+      - ./util:/mnt/util
+      - ./alembic:/mnt/alembic
+      - ./app.py:/mnt/app.py
+      - ./secret:/mnt/secret
+    environment:
+      SERVICE_NAME: "tongla-hub-consumer"
 
   rabbitmq:
     image: rabbitmq:management

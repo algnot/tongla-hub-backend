@@ -6,6 +6,7 @@ from model.one_time_password import OneTimePassword
 from model.email import Email
 from model.question import Question
 from model.test_case import TestCase
+from model.submit import Submit
 from model.base import Base
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool

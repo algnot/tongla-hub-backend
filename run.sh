@@ -9,5 +9,13 @@ echo "MySQL is up and running!"
 echo "Running Alembic migrations..."
 alembic upgrade head
 
-echo "Starting Flask application..."
-exec python -m flask run
+if [ "$SERVICE_NAME" = "tongla-hub-server" ]; then
+    echo "Starting Flask application..."
+    exec python -m flask run
+elif [ "$SERVICE_NAME" = "tongla-hub-consumer" ]; then
+    echo "Starting Consumer application..."
+    exec python app.py
+else
+    echo "Unknown service name: $SERVICE_NAME"
+    exit 1
+fi
