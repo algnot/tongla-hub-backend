@@ -6,7 +6,6 @@ from router.auth.auth import auth_app
 from router.code.code import code_app
 from router.data.data import data_app
 from util.config import get_config
-from util.consumer import Consumer
 
 app = Flask(__name__)
 CORS(app)

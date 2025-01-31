@@ -17,7 +17,8 @@ class Consumer:
         self.callback = callback
 
     def __del__(self):
-        self.connection.close()
+        if self.connection is not None:
+            self.connection.close()
 
     def create_connection(self):
         credentials = pika.PlainCredentials(self.username, self.password)
