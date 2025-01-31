@@ -27,6 +27,7 @@ services:
       - ./alembic:/mnt/alembic
       - ./app.py:/mnt/app.py
       - ./secret:/mnt/secret
+      - ./consumer:/mnt/consumer
     environment:
       SERVICE_NAME: "tongla-hub-server"
 
@@ -43,6 +44,7 @@ services:
       - ./alembic:/mnt/alembic
       - ./app.py:/mnt/app.py
       - ./secret:/mnt/secret
+      - ./consumer:/mnt/consumer
     environment:
       SERVICE_NAME: "tongla-hub-consumer"
 
