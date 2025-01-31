@@ -10,7 +10,6 @@ CORS(app)
 
 app.register_blueprint(auth_app)
 app.register_blueprint(data_app)
-
 app.register_blueprint(code_app)
 
 @app.route("/_hc", methods=["GET"])

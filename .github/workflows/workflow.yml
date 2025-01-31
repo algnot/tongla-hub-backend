@@ -46,6 +46,9 @@ jobs:
             EMAIL_API_ACCESS_TOKEN=${{ secrets.EMAIL_API_ACCESS_TOKEN }}
             
             JWT_SECRET=${{ secrets.JWT_SECRET }}
+            
+            RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
+            RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
 
             EOF
 

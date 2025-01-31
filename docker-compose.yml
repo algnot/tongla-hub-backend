@@ -28,5 +28,18 @@ services:
       - ./app.py:/mnt/app.py
       - ./secret:/mnt/secret
 
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    env_file:
+      - ./.env
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
 volumes:
   mysql-data:
+
+networks:
+  default:
+    driver: bridge
