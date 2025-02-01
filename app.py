@@ -1,10 +1,11 @@
+import asyncio
 from flask import Flask, jsonify
 from flask_cors import CORS
-
-from consumer.init import init_consumer
+from consumer.init_consumer import init_consumer
 from router.auth.auth import auth_app
 from router.code.code import code_app
 from router.data.data import data_app
+from web_socket.init_socket import init_web_socket_server
 from util.config import get_config
 
 app = Flask(__name__)
@@ -24,5 +25,7 @@ if __name__ == "__main__":
         app.run(threaded=True)
     elif server_mode == "tongla-hub-consumer":
         init_consumer()
+    elif server_mode == "tongla-hub-socket-server":
+        asyncio.run(init_web_socket_server())
     else:
         raise RuntimeError("unknown server mode")

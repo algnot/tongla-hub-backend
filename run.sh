@@ -15,6 +15,9 @@ if [ "$SERVICE_NAME" = "tongla-hub-server" ]; then
 elif [ "$SERVICE_NAME" = "tongla-hub-consumer" ]; then
     echo "Starting Consumer application..."
     exec python app.py
+elif [ "$SERVICE_NAME" = "tongla-hub-socket-server" ]; then
+    echo "Starting Socket Server application..."
+    exec python app.py
 else
     echo "Unknown service name: $SERVICE_NAME"
     exit 1

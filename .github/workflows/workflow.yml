@@ -31,6 +31,7 @@ jobs:
             APP_PORT=9000
             APP_VERSION=${{ github.sha }}
             APP_ENV=production
+            SOCKET_PORT=9001
             
             DATABASE_HOST=${{ secrets.DATABASE_HOST }}
             DATABASE_PORT=${{ secrets.DATABASE_PORT }}
