@@ -50,7 +50,7 @@ services:
       - ./consumer:/mnt/consumer
       - ./web_socket:/mnt/web_socket
     environment:
-      SERVICE_NAME: "tongla-hub-web_socket-server"
+      SERVICE_NAME: "tongla-hub-socket-server"
 
   consumer:
     build:
