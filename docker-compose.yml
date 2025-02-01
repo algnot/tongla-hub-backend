@@ -1,14 +1,5 @@
 
 services:
-  rabbitmq:
-    image: rabbitmq:management
-    container_name: rabbitmq
-    env_file:
-      - ./.env
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-
   server:
     build:
       context: .
@@ -68,6 +59,15 @@ services:
       SERVICE_NAME: "tongla-hub-consumer"
     depends_on:
       - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    env_file:
+      - ./.env
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
 networks:
   default:
