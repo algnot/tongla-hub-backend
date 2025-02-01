@@ -16,7 +16,6 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          script_stop: true
           debug: true
           command_timeout: 200m
           script: |

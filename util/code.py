@@ -25,13 +25,24 @@ def restrict_execution(code):
 
     os.environ["PATH"] = "/usr/bin:/bin"
 
+def wrap_code(code):
+    indented_code = "\n    ".join(code.splitlines())
+    wrapped_code = f"""
+try:
+    {indented_code}
+except EOFError:
+    print("EOFError: Not enough input provided.", flush=True)
+"""
+    return wrapped_code
+
 def execute_code(stdin, code):
     start_time = time.time()
     try:
         restrict_execution(code)
+        wrapped_code = wrap_code(code)
 
         process = subprocess.Popen(
-            ['python3', '-c', code],
+            ['python3', '-c', wrapped_code],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -60,6 +71,13 @@ def execute_code(stdin, code):
         return {
             "stdout": "",
             "stderr": f"Permission error: {str(e)} Are you hacker?",
+            "runtime": 0,
+            "runtime_unit": "ms"
+        }
+    except Exception:
+        return {
+            "stdout": "",
+            "stderr": "EOFError: No input provided for execution.",
             "runtime": 0,
             "runtime_unit": "ms"
         }

@@ -21,6 +21,7 @@ class Submit(Base):
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     owner = relationship("User")
     code = Column(TEXT, nullable=True)
+    info = Column(TEXT, nullable=True)
     status = Column(Enum(SubmitState), default=SubmitState.PENDING, nullable=False)
     score = Column(Integer, nullable=True)
     max_score = Column(Integer, nullable=True)
