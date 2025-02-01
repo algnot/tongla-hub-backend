@@ -38,6 +38,7 @@ def callback_submit(message):
         elif test_case.expected == output.get("stdout", output.get("stderr", "")):
             info.append({
                 **base_info,
+                "description": f"your output is correct :)",
                 "score": 1,
             })
             score += 1
@@ -46,7 +47,7 @@ def callback_submit(message):
             info.append({
                 **base_info,
                 "score": 0,
-                "description": f"your output is not match expected"
+                "description": f"your output is not match expected :("
             })
 
         max_score += 1

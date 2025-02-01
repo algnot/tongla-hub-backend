@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 
 from model.question import Question
-from model.submit import Submit
+from model.submit import Submit, SubmitState
 from util.publisher import Publisher
 from util.request import validate_request, handle_error, handle_access_token
 
@@ -24,11 +24,24 @@ def submit_code():
 
     exiting_question = exiting_question[0]
 
-    submit = Submit().create({
-        "question_id": exiting_question.id,
-        "owner_id": user.id,
-        "code": code,
-    })
+    submit = Submit().filter(filters=[("question_id", "=", exiting_question.id), ("owner_id", "=", user.id)], limit=1)
+
+    if len(submit) == 0:
+        submit = Submit().create({
+            "question_id": exiting_question.id,
+            "owner_id": user.id,
+            "code": code,
+        })
+        exiting_question.update({
+            "submitted": exiting_question.submitted + 1
+        })
+    else:
+        submit = submit[0].update({
+            "question_id": exiting_question.id,
+            "owner_id": user.id,
+            "code": code,
+            "status": SubmitState.PENDING
+        })
 
     Publisher().publish(exchange="question", routing_key="submit", message={
         "submit_id": submit.id,

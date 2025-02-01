@@ -1,9 +1,11 @@
+import json
 from flask import Blueprint, jsonify, request
-
 from model.question import Question
+from model.submit import Submit
 from model.test_case import TestCase
 from model.users import User, RoleType
 from util.request import handle_error, handle_access_token
+
 
 get_question_app = Blueprint("get_question_app", __name__)
 
@@ -39,6 +41,23 @@ def get_question():
             "expected_run_time_ms": test_case.expected_run_time_ms,
         })
 
+    submit = Submit().filter(filters=[("question_id", "=", exiting_question.id), ("owner_id", "=", user.id)], limit=1)
+    submit_info = {
+        "id": 0
+    }
+    if len(submit) > 0:
+        try:
+            info = json.loads(submit[0].info)
+        except Exception:
+            info = ""
+
+        submit_info["id"] = submit[0].id
+        submit_info["code"] = submit[0].code
+        submit_info["status"] = submit[0].status.name
+        submit_info["score"] = submit[0].score
+        submit_info["max_score"] = submit[0].max_score
+        submit_info["info"] = info
+
     return jsonify({
         "id": exiting_question.id,
         "title": exiting_question.title,
@@ -56,4 +75,5 @@ def get_question():
         "created_at": exiting_question.created_at,
         "test_cases": test_case_response,
         "answer_code": answer_code,
+        "submit_info": submit_info
     })
