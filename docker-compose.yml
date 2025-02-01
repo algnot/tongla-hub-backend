@@ -1,16 +1,13 @@
 
 services:
-  mysql:
-    image: mysql:latest
-    volumes:
-      - mysql-data:/var/lib/mysql
-    restart: always
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    env_file:
+      - ./.env
     ports:
-      - "3306:3306"
-    environment:
-      MYSQL_DATABASE: "tongla-hub"
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_PASSWORD: root
+      - "5672:5672"
+      - "15672:15672"
 
   server:
     build:
@@ -72,14 +69,6 @@ services:
     depends_on:
       - rabbitmq
 
-  rabbitmq:
-    image: rabbitmq:management
-    container_name: rabbitmq
-    env_file:
-      - ./.env
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-
-volumes:
-  mysql-data:
+networks:
+  default:
+    driver: bridge
