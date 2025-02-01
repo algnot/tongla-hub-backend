@@ -33,6 +33,6 @@ async def handler(websocket):
 
 async def init_web_socket_server():
     server_port = set_config("SOCKET_PORT", "9001")
-    async with websockets.serve(handler, "localhost", int(server_port)):
+    async with websockets.serve(handler, "0.0.0.0", int(server_port)):
         print("WebSocket server is started")
         await asyncio.Future()
