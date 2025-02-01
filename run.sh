@@ -6,10 +6,9 @@ until mysqladmin ping -h"$DATABASE_HOST" -u"$DATABASE_USERNAME" -p"$DATABASE_PAS
 done
 echo "MySQL is up and running!"
 
-echo "Running Alembic migrations..."
-alembic upgrade head
-
 if [ "$SERVICE_NAME" = "tongla-hub-server" ]; then
+    echo "Running Alembic migrations..."
+    alembic upgrade head
     echo "Starting Flask application..."
     exec python -m flask run
 elif [ "$SERVICE_NAME" = "tongla-hub-consumer" ]; then
