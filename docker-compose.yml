@@ -69,6 +69,8 @@ services:
       - ./web_socket:/mnt/web_socket
     environment:
       SERVICE_NAME: "tongla-hub-consumer"
+    depends_on:
+      - rabbitmq
 
   rabbitmq:
     image: rabbitmq:management
