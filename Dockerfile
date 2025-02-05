@@ -4,7 +4,7 @@ WORKDIR /mnt
 COPY . .
 COPY .env /mnt/.env
 
-RUN apt-get update && apt-get install -y default-mysql-client
+RUN apt-get update && apt-get install -y default-mysql-client pdftk-java
 
 RUN python -m pip install --upgrade pip setuptools
 RUN pip install -r requirements.txt
