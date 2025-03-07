@@ -51,7 +51,7 @@ mapper = {
         "offset": "id",
         "filter": ["title", "description"],
         "filter_operator": "ilike",
-        "additional_filter": [("is_public", "=", True)],
+        "additional_filter": [],
         "additional_order": [("rate", "asc")],
         "role": [RoleType.USER, RoleType.ADMIN],
         "mapper_key": ["id", "title", "rate", "is_system_question", "is_public", "submitted", "commented", "created_at"],

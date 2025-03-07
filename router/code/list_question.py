@@ -18,13 +18,15 @@ def get_question():
 
     if offset:
         if int(offset) > 0:
-            offset_filter = [("id", "<=", int(offset))]
+            filter_list = [("id", ">=", int(offset))]
         else:
-            offset_filter = []
+            filter_list = []
     else:
-        offset_filter = []
+        filter_list = []
 
-    questions = Question().filter(filters=offset_filter, order_by=[("id", "desc")],
+    filter_list.append(("is_public", "=", True))
+
+    questions = Question().filter(filters=filter_list, order_by=[("id", "asc")],
                                   limit=limit + 1)
     response = []
 
