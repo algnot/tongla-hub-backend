@@ -17,7 +17,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           debug: true
-          command_timeout: 200m
+          command_timeout: 500m
           script: |
             cd tongla-hub-backend
             git fetch --all 
