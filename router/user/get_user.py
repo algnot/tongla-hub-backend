@@ -27,4 +27,5 @@ def get_user_by_id(user_id):
         "image_url": exiting_user[0].image_url,
         "created_at": exiting_user[0].created_at,
         "updated_at": exiting_user[0].updated_at,
+        "score": exiting_user[0].score,
     })
