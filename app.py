@@ -6,6 +6,7 @@ from router.auth.auth import auth_app
 from router.code.code import code_app
 from router.data.data import data_app
 from router.pdf.pdf import pdf_app
+from router.user.user import user_app
 from web_socket.init_socket import init_web_socket_server
 from util.config import get_config
 
@@ -16,6 +17,7 @@ app.register_blueprint(auth_app)
 app.register_blueprint(data_app)
 app.register_blueprint(code_app)
 app.register_blueprint(pdf_app)
+app.register_blueprint(user_app)
 
 @app.route("/_hc", methods=["GET"])
 def _hc():

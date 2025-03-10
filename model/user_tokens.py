@@ -97,7 +97,7 @@ class UserTokens(Base):
         return refresh_token.generate_jwt(expired_in=expired_in, type=TokenType.REFRESH)
 
     def generate_access_token(self):
-        expired_in = datetime.timedelta(minutes=20)
+        expired_in = datetime.timedelta(days=1)
         access_token = UserTokens()
         access_token.create({
             "user_id": self.user_id,
