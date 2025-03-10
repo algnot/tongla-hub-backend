@@ -17,6 +17,10 @@ elif [ "$SERVICE_NAME" = "tongla-hub-consumer" ]; then
 elif [ "$SERVICE_NAME" = "tongla-hub-socket-server" ]; then
     echo "Starting Socket Server application..."
     exec python app.py
+elif [ "$SERVICE_NAME" = "tongla-hub-cron" ]; then
+    echo "Starting Cron Job Server application..."
+    exec python app.py
+else
 else
     echo "Unknown service name: $SERVICE_NAME"
     exit 1
