@@ -21,7 +21,6 @@ elif [ "$SERVICE_NAME" = "tongla-hub-cron" ]; then
     echo "Starting Cron Job Server application..."
     exec python app.py
 else
-else
     echo "Unknown service name: $SERVICE_NAME"
     exit 1
 fi
