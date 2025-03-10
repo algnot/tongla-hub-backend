@@ -40,6 +40,26 @@ services:
     environment:
       SERVICE_NAME: "tongla-hub-socket-server"
 
+  cron-job:
+    build:
+      context: .
+    env_file:
+      - ./.env
+    ports:
+      - "${SOCKET_PORT:-9001}:9001"
+    restart: always
+    volumes:
+      - ./model:/mnt/model
+      - ./router:/mnt/router
+      - ./util:/mnt/util
+      - ./alembic:/mnt/alembic
+      - ./app.py:/mnt/app.py
+      - ./secret:/mnt/secret
+      - ./consumer:/mnt/consumer
+      - ./web_socket:/mnt/web_socket
+    environment:
+      SERVICE_NAME: "tongla-hub-cron"
+
   consumer:
     build:
       context: .

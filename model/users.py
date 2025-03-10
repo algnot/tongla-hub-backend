@@ -27,6 +27,7 @@ class User(Base):
                                    onupdate=datetime.datetime.now(datetime.timezone.utc))
     role = Column(Enum(RoleType), default=RoleType.USER, nullable=False)
     image_url = Column(TEXT, nullable=True)
+    score = Column(Integer, default=0)
 
     def sign_up(self, password):
         return self.create({

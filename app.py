@@ -1,7 +1,9 @@
 import asyncio
+import logging
 from flask import Flask, jsonify
 from flask_cors import CORS
 from consumer.init_consumer import init_consumer
+from cron.init_cron import init_cron
 from router.auth.auth import auth_app
 from router.code.code import code_app
 from router.data.data import data_app
@@ -24,12 +26,17 @@ def _hc():
     return jsonify({"status": "server is running"})
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
     server_mode = get_config("SERVICE_NAME", "tongla-hub-server")
+    logger.info(f"Starting {server_mode}")
     if server_mode == "tongla-hub-server":
         app.run(threaded=True)
     elif server_mode == "tongla-hub-consumer":
         init_consumer()
     elif server_mode == "tongla-hub-socket-server":
         asyncio.run(init_web_socket_server())
+    elif server_mode == "tongla-hub-cron":
+        init_cron()
     else:
         raise RuntimeError("unknown server mode")
