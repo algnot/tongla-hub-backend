@@ -45,8 +45,6 @@ services:
       context: .
     env_file:
       - ./.env
-    ports:
-      - "${SOCKET_PORT:-9001}:9001"
     restart: always
     volumes:
       - ./model:/mnt/model
