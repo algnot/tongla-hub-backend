@@ -46,7 +46,7 @@ def get_question():
     for question in questions[:limit]:
         question_id = question.id
         submit = Submit().filter(filters=[("question_id", "=", question_id),
-                                          ("owner_id", "=", user.id)])
+                                          ("owner_id", "=", user.id)], limit=1)
 
         is_submit = False
         is_passed = False

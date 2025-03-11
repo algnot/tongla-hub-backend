@@ -59,6 +59,7 @@ jobs:
 
             EOF
 
+            docker system prune
             docker image prune -a -f
             docker compose up --build -d
             docker stop tongla-hub-backend-mysql-1
