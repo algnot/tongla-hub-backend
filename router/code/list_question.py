@@ -15,6 +15,8 @@ def get_question():
     query = request.args
     limit = int(query.get("limit", 20))
     offset = query.get("offset", False)
+    mode = query.get("mode", "all")
+    rate = query.get("rate", "all")
 
     if offset:
         if int(offset) > 0:
@@ -23,6 +25,17 @@ def get_question():
             filter_list = []
     else:
         filter_list = []
+
+    if mode in ["submitted", "not_submitted"]:
+        all_submit = Submit().filter(filters=[("owner_id", "=", user.id)])
+        all_submit_question_ids = [submit.question_id for submit in all_submit]
+        if mode == "submitted":
+            filter_list.append(("id", "in", all_submit_question_ids))
+        else:
+            filter_list.append(("id", "not in", all_submit_question_ids))
+
+    if rate != "all":
+        filter_list.append(("rate", "=", int(rate)))
 
     filter_list.append(("is_public", "=", True))
 

@@ -144,6 +144,8 @@ class Base(BaseClass):
                     current_conditions.append(getattr(self.__class__, field) > value)
                 elif condition_operator == "in":
                     current_conditions.append(getattr(self.__class__, field).in_(value))
+                elif condition_operator == "not in":
+                    current_conditions.append(getattr(self.__class__, field).not_in(value))
                 else:
                     current_conditions.append(getattr(self.__class__, field) == value)
 
