@@ -15,7 +15,7 @@ def get_user_by_id(user_id):
     if user.role != RoleType.ADMIN and user.id != int(user_id):
         raise Exception("Access denied")
 
-    if payload.get("role", False) != RoleType.USER.name and user.role != RoleType.ADMIN:
+    if payload.get("role", False) and user.role != RoleType.ADMIN:
         raise Exception("User can not update role of user")
 
     exiting_user = User().filter(filters=[("id", "=", user_id)], limit=1)
