@@ -38,7 +38,51 @@ jobs:
               -o UserKnownHostsFile=/dev/null \
               ${{ secrets.CLOUDFLARED_SSH_USER }}@${{ secrets.CLOUDFLARED_SSH_HOST }} << EOF
           
-          echo "test deploy"
+          cd server/tongla-hub-backend/
+          git fetch --all 
+          git reset --hard origin/main 
+
+          cat > .env << EOF
+          FLASK_RUN_PORT=9000
+          FLASK_RUN_HOST=0.0.0.0
+          FLASK_RUN_DEBUG=true
+          
+          APP_PORT=9000
+          APP_VERSION=${{ github.sha }}
+          APP_ENV=production
+          SOCKET_PORT=9001
+          
+          DATABASE_HOST=${{ secrets.DATABASE_HOST }}
+          DATABASE_PORT=${{ secrets.DATABASE_PORT }}
+          DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}
+          DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+          DATABASE_NAME=${{ secrets.DATABASE_NAME }}
+          
+          EMAIL_API_ENDPOINT=${{ secrets.EMAIL_API_ENDPOINT }}
+          EMAIL_API_SERVICE_ID=${{ secrets.EMAIL_API_SERVICE_ID }}
+          EMAIL_API_TEMPLATE_ID=${{ secrets.EMAIL_API_TEMPLATE_ID }}
+          EMAIL_API_USER_ID=${{ secrets.EMAIL_API_USER_ID }}
+          EMAIL_API_ACCESS_TOKEN=${{ secrets.EMAIL_API_ACCESS_TOKEN }}
+          
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          
+          RABBITMQ_HOST=${{ secrets.RABBITMQ_HOST }}
+          RABBITMQ_POST=${{ secrets.RABBITMQ_POST }}
+          RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
+          RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
+          
+          S3_ENDPOINT=${{ secrets.S3_ENDPOINT }}
+          S3_PUBLIC_ENDPOINT=${{ secrets.S3_PUBLIC_ENDPOINT }}
+          S3_ACCESS_TOKEN=${{ secrets.S3_ACCESS_TOKEN }}
+          S3_SECRET_TOKEN=${{ secrets.S3_SECRET_TOKEN }}
+          EOF
+
+          docker system prune
+          docker image prune -a -f
+          docker compose up --build -d
+          docker stop tongla-hub-backend-mysql-1
+          docker ps
+          echo "Deploy completed!"
           
           exit
           EOF
