@@ -5,7 +5,7 @@ on: [push]
 jobs:
 
   Deploy:
-    if: github.ref == 'refs/heads/main-archive'
+    if: github.ref == 'refs/heads/main' && false
     runs-on: ubuntu-latest
 
     steps:
@@ -56,7 +56,6 @@ jobs:
             S3_PUBLIC_ENDPOINT=${{ secrets.S3_PUBLIC_ENDPOINT }}
             S3_ACCESS_TOKEN=${{ secrets.S3_ACCESS_TOKEN }}
             S3_SECRET_TOKEN=${{ secrets.S3_SECRET_TOKEN }}
-
             EOF
 
             docker system prune
