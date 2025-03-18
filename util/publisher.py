@@ -7,7 +7,7 @@ class Publisher:
 
     def __init__(self):
         self.host = get_config("RABBITMQ_HOST", "localhost")
-        self.port = get_config("RABBITMQ_POST", "5672")
+        self.port = get_config("RABBITMQ_PORT", "5672")
         self.username = get_config("RABBITMQ_DEFAULT_USER", "root")
         self.password = get_config("RABBITMQ_DEFAULT_PASS", "root")
 
