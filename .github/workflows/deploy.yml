@@ -32,7 +32,6 @@ jobs:
 
       - name: Access Server
         run: |
-          sleep 5
           ssh -tt -o ProxyCommand="cloudflared access ssh --hostname ${{ secrets.CLOUDFLARED_SSH_HOST }}" \
               -o StrictHostKeyChecking=no \
               -o UserKnownHostsFile=/dev/null \
