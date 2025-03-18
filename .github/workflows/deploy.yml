@@ -1,0 +1,44 @@
+name: Deployment Workflow
+
+on: [push]
+
+jobs:
+
+  Deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Cloudflared
+        run: |
+          curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
+          chmod +x cloudflared
+          sudo mv cloudflared /usr/local/bin/
+
+      - name: Authenticate Cloudflare Tunnel
+        run: |
+          mkdir -p ~/.cloudflared
+          echo "${{ secrets.CLOUDFLARED_TUNNEL_CREDENTIALS }}" > ~/.cloudflared/credentials.json
+          echo "${{ secrets.CLOUDFLARED_TUNNEL_SECRETKEY }}" > ~/.cloudflared/cert.pem
+
+      - name: Configure SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.CLOUDFLARED_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Access Server
+        run: |
+          sleep 5
+          ssh -tt -o ProxyCommand="cloudflared access ssh --hostname ${{ secrets.CLOUDFLARED_SSH_HOST }}" \
+              -o StrictHostKeyChecking=no \
+              -o UserKnownHostsFile=/dev/null \
+              ${{ secrets.CLOUDFLARED_SSH_USER }}@${{ secrets.CLOUDFLARED_SSH_HOST }} << EOF
+          
+          echo "test deploy"
+          
+          exit
+          EOF
