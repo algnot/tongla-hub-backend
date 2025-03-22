@@ -7,7 +7,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-@init_job("0 * * * *")
+@init_job("0 0 * * *")
 def calculate_user_score_job():
     users = User().filter(filters=[])
 
