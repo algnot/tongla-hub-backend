@@ -9,7 +9,7 @@ from util.uploader import S3Uploader
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-@init_job("0 1 * * *")
+@init_job("0 22 * * *")
 def database_backup():
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
