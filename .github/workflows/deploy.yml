@@ -66,6 +66,12 @@ jobs:
           S3_PUBLIC_ENDPOINT=${{ secrets.S3_PUBLIC_ENDPOINT }}
           S3_ACCESS_TOKEN=${{ secrets.S3_ACCESS_TOKEN }}
           S3_SECRET_TOKEN=${{ secrets.S3_SECRET_TOKEN }}
+          
+          BACKUP_DATABASE_HOST=${{ secrets.BACKUP_DATABASE_HOST }}
+          BACKUP_DATABASE_PORT=${{ secrets.BACKUP_DATABASE_PORT }}
+          BACKUP_DATABASE_USERNAME=${{ secrets.BACKUP_DATABASE_USERNAME }}
+          BACKUP_DATABASE_PASSWORD=${{ secrets.BACKUP_DATABASE_PASSWORD }}
+          BACKUP_DATABASE_NAME=${{ secrets.BACKUP_DATABASE_NAME }}
           EOF
           
           cat ./.env | ssh -o ProxyCommand="cloudflared access ssh --hostname ${{ secrets.CLOUDFLARED_SSH_HOST }}" \
