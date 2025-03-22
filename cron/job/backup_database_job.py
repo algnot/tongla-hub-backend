@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 @init_job("0 22 * * *")
-def database_backup():
+def database_backup_job():
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     databases_host = get_config("BACKUP_DATABASE_HOST").split(",")
