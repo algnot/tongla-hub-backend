@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, Response
 from util.config import get_config
-from util.request import handle_error
+from util.request import handle_error, fetch_and_convert_image_to_base64
 import websockets
 import ssl
 import json
@@ -17,6 +17,8 @@ now_playing_app = Blueprint("now_playing", __name__)
 
 latest_song = {}
 
+ssl_context = ssl._create_unverified_context()
+
 @now_playing_app.route("/now-playing.svg", methods=["GET"])
 @handle_error
 def get_now_playing_svg():
@@ -25,7 +27,8 @@ def get_now_playing_svg():
         content = f.read()
         content = content.replace("{info@artist}", html.escape(latest_song.get("artist", "")))
         content = content.replace("{info@title}", html.escape(latest_song.get("title", "")))
-        content = content.replace("{info@image}", html.escape(latest_song.get("albumArt", "")))
+        base64_img = fetch_and_convert_image_to_base64(latest_song.get("albumArt", ""))
+        content = content.replace("{info@image}", html.escape(base64_img))
 
         start_ts = latest_song.get("startTimestamp", 0)
         end_ts = latest_song.get("endTimestamp", 1000)
@@ -53,11 +56,11 @@ def get_now_playing_json():
 
 async def connect_websocket():
     global latest_song
-    ssl_context = ssl._create_unverified_context()
     while True:
         try:
             print("Trying to connect to WebSocket...")
-            async with websockets.connect(get_config("APPLE_MUSIC_SOCKET_HOST", "wss://localhost"), ssl=ssl_context) as websocket:
+            uri = get_config("APPLE_MUSIC_SOCKET_HOST", "wss://localhost")
+            async with websockets.connect(uri, ssl=ssl_context) as websocket:
                 print("Connected to WebSocket")
                 while True:
                     message = await websocket.recv()

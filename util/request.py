@@ -2,6 +2,8 @@ from functools import wraps
 from flask import request, jsonify
 from model.user_tokens import UserTokens, TokenType
 from model.users import User
+import base64
+import requests
 
 
 def validate_request(required_fields):
@@ -112,4 +114,15 @@ def handle_refresh_token(func):
         return func(*args, **kwargs)
 
     return wrapper
+
+def fetch_and_convert_image_to_base64(url: str) -> str:
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        image_data = response.content
+        base64_encoded = base64.b64encode(image_data).decode("utf-8")
+        return f"data:image/jpeg;base64,{base64_encoded}"
+    except Exception as e:
+        print("Error fetching image:", e)
+        return ""
 
