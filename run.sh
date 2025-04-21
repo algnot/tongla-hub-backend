@@ -10,7 +10,7 @@ if [ "$SERVICE_NAME" = "tongla-hub-server" ]; then
     echo "Running Alembic migrations..."
     alembic upgrade head
     echo "Starting Flask application..."
-    exec python -m flask run
+    exec python app.py
 elif [ "$SERVICE_NAME" = "tongla-hub-consumer" ]; then
     echo "Starting Consumer application..."
     exec python app.py

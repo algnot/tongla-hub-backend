@@ -72,6 +72,8 @@ jobs:
           BACKUP_DATABASE_USERNAME=${{ secrets.BACKUP_DATABASE_USERNAME }}
           BACKUP_DATABASE_PASSWORD=${{ secrets.BACKUP_DATABASE_PASSWORD }}
           BACKUP_DATABASE_NAME=${{ secrets.BACKUP_DATABASE_NAME }}
+          
+          APPLE_MUSIC_SOCKET_HOST=${{ secrets.APPLE_MUSIC_SOCKET_HOST }}
           EOF
           
           cat ./.env | ssh -o ProxyCommand="cloudflared access ssh --hostname ${{ secrets.CLOUDFLARED_SSH_HOST }}" \
