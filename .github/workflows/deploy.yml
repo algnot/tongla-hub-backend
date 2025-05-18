@@ -77,6 +77,9 @@ jobs:
           
           OPENID_CLIENT_ID=${{ secrets.OPENID_CLIENT_ID }}
           OPENID_CLIENT_SECRET=${{ secrets.OPENID_CLIENT_SECRET }}
+          OPENID_TOKEN_ENDPOINT=${{ secrets.OPENID_TOKEN_ENDPOINT }}
+          OPENID_USERINFO_ENDPOINT=${{ secrets.OPENID_USERINFO_ENDPOINT }}
+          OPENID_CLIENT_REDIRECT_URI=${{ secrets.OPENID_CLIENT_REDIRECT_URI }}
           EOF
           
           cat ./.env | ssh -o ProxyCommand="cloudflared access ssh --hostname ${{ secrets.CLOUDFLARED_SSH_HOST }}" \
