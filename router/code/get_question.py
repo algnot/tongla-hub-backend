@@ -65,7 +65,7 @@ def get_question():
         "test_cases": test_case_response,
         "answer_code": answer_code,
         "submit_info": {
-            "status": submit[0].status,
+            "status": str(submit[0].status.name),
             "info": submit_info,
         }
     })
