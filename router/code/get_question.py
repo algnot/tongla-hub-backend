@@ -42,21 +42,10 @@ def get_question():
         })
 
     submit = Submit().filter(filters=[("question_id", "=", exiting_question.id), ("owner_id", "=", user.id)], limit=1)
-    submit_info = {
-        "id": 0
-    }
-    if len(submit) > 0:
-        try:
-            info = json.loads(submit[0].info)
-        except Exception:
-            info = ""
+    submit_info = ""
 
-        submit_info["id"] = submit[0].id
-        submit_info["code"] = submit[0].code
-        submit_info["status"] = submit[0].status.name
-        submit_info["score"] = submit[0].score
-        submit_info["max_score"] = submit[0].max_score
-        submit_info["info"] = info
+    if len(submit) > 0:
+        submit_info = submit[0].info
 
     return jsonify({
         "id": exiting_question.id,
