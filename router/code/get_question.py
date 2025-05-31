@@ -47,7 +47,7 @@ def get_question():
     if len(submit) > 0:
         submit_info = {
             "info": submit[0].info,
-            "status": submit[0].status,
+            "status": str(submit[0].status.name),
         }
 
     return jsonify({
