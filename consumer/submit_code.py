@@ -22,14 +22,14 @@ def callback_submit(message):
         output = execute_code(stdin=test_case.input or "", code=code)
 
         if test_case.expected_run_time_ms < output.get("runtime", 0):
-            info += f"Test Case {max_score + 1}: runtime failed ❌\nprocess run time = {output.get('runtime', 0)} ms more than expected run time ms = {test_case.expected_run_time_ms} ms\n"
+            info += f"Test Case {max_score + 1}: runtime failed ❌\nprocess run time = {output.get('runtime', 0)} ms more than expected run time ms = {test_case.expected_run_time_ms} ms\n\n"
 
         elif test_case.expected == output.get("stdout", output.get("stderr", "")):
-            info += f"Test Case {max_score + 1}: Passed ✅\n"
+            info += f"Test Case {max_score + 1}: Passed ✅\n\n"
             score += 1
 
         else:
-            info += f"Test Case {max_score + 1}: output failed ❌\nyour output is not match expected :(\n"
+            info += f"Test Case {max_score + 1}: output failed ❌\nyour output is not match expected :(\n\n"
 
         max_score += 1
 
