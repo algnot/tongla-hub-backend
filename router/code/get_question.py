@@ -64,5 +64,8 @@ def get_question():
         "created_at": exiting_question.created_at,
         "test_cases": test_case_response,
         "answer_code": answer_code,
-        "submit_info": submit_info
+        "submit_info": {
+            "status": submit.status,
+            "info": submit_info,
+        }
     })
