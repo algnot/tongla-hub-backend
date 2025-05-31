@@ -40,7 +40,7 @@ def submit_code():
             "question_id": exiting_question.id,
             "owner_id": user.id,
             "code": code,
-            "status": SubmitState.PENDING
+            "status": str(SubmitState.PENDING.name)
         })
 
     Publisher().publish(exchange="question", routing_key="submit", message={
