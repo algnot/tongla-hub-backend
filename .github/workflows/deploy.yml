@@ -101,6 +101,11 @@ jobs:
 
           docker system prune
           docker image prune -a -f
-          docker compose up --build -d
+          
+          docker compose build base
+          docker compose up -d
+          
+          docker system prune
+          docker image prune -a -f
           
           exit
