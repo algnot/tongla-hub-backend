@@ -1,8 +1,27 @@
 
 services:
-  server:
+  base:
     build:
       context: .
+    image: tongla-hub:latest
+    env_file:
+      - ./.env
+    restart: always
+    volumes:
+      - ./model:/mnt/model
+      - ./router:/mnt/router
+      - ./util:/mnt/util
+      - ./alembic:/mnt/alembic
+      - ./app.py:/mnt/app.py
+      - ./secret:/mnt/secret
+      - ./consumer:/mnt/consumer
+      - ./web_socket:/mnt/web_socket
+    environment:
+      SERVICE_NAME: "tongla-hub-image-base"
+    entrypoint: [ "sleep", "infinity" ]
+
+  server:
+    image: tongla-hub:latest
     env_file:
       - ./.env
     ports:
@@ -21,8 +40,7 @@ services:
       SERVICE_NAME: "tongla-hub-server"
 
   socket-server:
-    build:
-      context: .
+    image: tongla-hub:latest
     env_file:
       - ./.env
     ports:
@@ -41,8 +59,7 @@ services:
       SERVICE_NAME: "tongla-hub-socket-server"
 
   cron-job:
-    build:
-      context: .
+    image: tongla-hub:latest
     env_file:
       - ./.env
     restart: always
@@ -59,8 +76,7 @@ services:
       SERVICE_NAME: "tongla-hub-cron"
 
   consumer:
-    build:
-      context: .
+    image: tongla-hub:latest
     env_file:
       - ./.env
     restart: always
