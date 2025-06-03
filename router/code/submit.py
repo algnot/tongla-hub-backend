@@ -31,6 +31,7 @@ def submit_code():
             "question_id": exiting_question.id,
             "owner_id": user.id,
             "code": code,
+            "status": SubmitState.PENDING,
         })
         exiting_question.update({
             "submitted": exiting_question.submitted + 1
@@ -40,7 +41,7 @@ def submit_code():
             "question_id": exiting_question.id,
             "owner_id": user.id,
             "code": code,
-            "status": str(SubmitState.PENDING)
+            "status": SubmitState.PENDING,
         })
 
     Publisher().publish(exchange="question", routing_key="submit", message={
