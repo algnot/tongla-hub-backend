@@ -50,7 +50,7 @@ def get_question():
             "info": submit[0].info,
             "status": str(submit[0].status.name),
         }
-        start_code = submit[0].info.code
+        start_code = submit[0].code
 
     return jsonify({
         "id": exiting_question.id,
