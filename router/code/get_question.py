@@ -44,17 +44,19 @@ def get_question():
     submit = Submit().filter(filters=[("question_id", "=", exiting_question.id), ("owner_id", "=", user.id)], limit=1)
     submit_info = {}
 
+    start_code = exiting_question.start_code
     if len(submit) > 0:
         submit_info = {
             "info": submit[0].info,
             "status": str(submit[0].status.name),
         }
+        start_code = submit[0].info.code
 
     return jsonify({
         "id": exiting_question.id,
         "title": exiting_question.title,
         "description": exiting_question.description,
-        "start_code": exiting_question.start_code,
+        "start_code": start_code,
         "rate": exiting_question.rate,
         "owner": {
             "id": owner.id,
