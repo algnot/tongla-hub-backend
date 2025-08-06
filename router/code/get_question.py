@@ -32,7 +32,7 @@ def get_question():
         answer_code = exiting_question.answer_code
 
     test_case_response = []
-    test_cases = TestCase().filter([("question_id", "=", exiting_question.id)])
+    test_cases = TestCase().filter([("question_id", "=", exiting_question.id)], limit=3)
     for test_case in test_cases:
         test_case_response.append({
             "id": test_case.id,
