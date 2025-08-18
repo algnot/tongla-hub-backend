@@ -16,6 +16,7 @@ services:
       - ./secret:/mnt/secret
       - ./consumer:/mnt/consumer
       - ./web_socket:/mnt/web_socket
+      - ./secret/database.pem:/etc/ssl/certs/database.pem:ro
     environment:
       SERVICE_NAME: "tongla-hub-image-base"
     entrypoint: [ "sleep", "infinity" ]
@@ -36,6 +37,7 @@ services:
       - ./secret:/mnt/secret
       - ./consumer:/mnt/consumer
       - ./web_socket:/mnt/web_socket
+      - ./secret/database.pem:/etc/ssl/certs/database.pem:ro
     environment:
       SERVICE_NAME: "tongla-hub-server"
 
@@ -55,6 +57,7 @@ services:
       - ./secret:/mnt/secret
       - ./consumer:/mnt/consumer
       - ./web_socket:/mnt/web_socket
+      - ./secret/database.pem:/etc/ssl/certs/database.pem:ro
     environment:
       SERVICE_NAME: "tongla-hub-socket-server"
 
@@ -72,6 +75,7 @@ services:
       - ./secret:/mnt/secret
       - ./consumer:/mnt/consumer
       - ./web_socket:/mnt/web_socket
+      - ./secret/database.pem:/etc/ssl/certs/database.pem:ro
     environment:
       SERVICE_NAME: "tongla-hub-cron"
 
@@ -89,6 +93,7 @@ services:
       - ./secret:/mnt/secret
       - ./consumer:/mnt/consumer
       - ./web_socket:/mnt/web_socket
+      - ./secret/database.pem:/etc/ssl/certs/database.pem:ro
     environment:
       SERVICE_NAME: "tongla-hub-consumer"
     depends_on:
