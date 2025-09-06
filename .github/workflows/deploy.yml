@@ -3,37 +3,47 @@ name: Deployment Workflow
 on: [push]
 
 jobs:
-
-  Deploy:
+  Lint:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    environment: tonkla-vm-deploy-env
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install Cloudflared
-        run: |
-          curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
-          chmod +x cloudflared
-          sudo mv cloudflared /usr/local/bin/
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-      - name: Authenticate Cloudflare Tunnel
-        run: |
-          mkdir -p ~/.cloudflared
-          echo "${{ secrets.CLOUDFLARED_TUNNEL_CREDENTIALS }}" > ~/.cloudflared/credentials.json
-          echo "${{ secrets.CLOUDFLARED_TUNNEL_SECRETKEY }}" > ~/.cloudflared/cert.pem
+      - name: Install Ruff
+        run: pip install ruff
 
-      - name: Configure SSH Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.CLOUDFLARED_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
+      - name: Run Ruff Lint
+        run: ruff check .
 
-      - name: Sync Environment
-        run: |
-          cat > .env << EOF
+  Deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: Lint
+    runs-on: ubuntu-latest
+    environment: tonkla-vm-deploy-env
+
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script_stop: true
+          debug: true
+          command_timeout: 200m
+          script: |
+            cd service/prod/tongla-hub-backend
+            git fetch --all 
+            git reset --hard origin/main
+            
+            cat > .env << EOF
           FLASK_RUN_PORT=9000
           FLASK_RUN_HOST=0.0.0.0
           FLASK_RUN_DEBUG=true
@@ -82,30 +92,10 @@ jobs:
           OPENID_CLIENT_REDIRECT_URI=${{ secrets.OPENID_CLIENT_REDIRECT_URI }}
           EOF
           
-          cat ./.env | ssh -o ProxyCommand="cloudflared access ssh --hostname ${{ secrets.CLOUDFLARED_SSH_HOST }}" \
-            -o StrictHostKeyChecking=no \
-            -o UserKnownHostsFile=/dev/null \
-            ${{ secrets.CLOUDFLARED_SSH_USER }}@${{ secrets.CLOUDFLARED_SSH_HOST }} 'cat > ~/server/tongla-hub-backend/.env'
-
-      - name: Access Server
-        run: |
-          ssh -tt -o ProxyCommand="cloudflared access ssh --hostname ${{ secrets.CLOUDFLARED_SSH_HOST }}" \
-              -o StrictHostKeyChecking=no \
-              -o UserKnownHostsFile=/dev/null \
-              ${{ secrets.CLOUDFLARED_SSH_USER }}@${{ secrets.CLOUDFLARED_SSH_HOST }} << EOF
-          
-          set -e
-          cd server/tongla-hub-backend/
-          git fetch --all 
-          git reset --hard origin/main 
-
-          docker system prune
-          docker image prune -a -f
-          
           docker compose build base
           docker compose up -d
           
           docker system prune
           docker image prune -a -f
           
-          exit
+          echo "Deploy completed!"
