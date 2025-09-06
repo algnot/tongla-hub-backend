@@ -20,6 +20,8 @@ services:
     environment:
       SERVICE_NAME: "tongla-hub-image-base"
     entrypoint: [ "sleep", "infinity" ]
+    networks:
+      - shared-db
 
   server:
     image: tongla-hub:latest
@@ -40,6 +42,8 @@ services:
       - ./secret/database.pem:/etc/ssl/certs/database.pem:ro
     environment:
       SERVICE_NAME: "tongla-hub-server"
+    networks:
+      - shared-db
 
   socket-server:
     image: tongla-hub:latest
@@ -60,6 +64,8 @@ services:
       - ./secret/database.pem:/etc/ssl/certs/database.pem:ro
     environment:
       SERVICE_NAME: "tongla-hub-socket-server"
+    networks:
+      - shared-db
 
   cron-job:
     image: tongla-hub:latest
@@ -78,6 +84,8 @@ services:
       - ./secret/database.pem:/etc/ssl/certs/database.pem:ro
     environment:
       SERVICE_NAME: "tongla-hub-cron"
+    networks:
+      - shared-db
 
   consumer:
     image: tongla-hub:latest
@@ -98,6 +106,8 @@ services:
       SERVICE_NAME: "tongla-hub-consumer"
     depends_on:
       - rabbitmq
+    networks:
+      - shared-db
 
   rabbitmq:
     image: rabbitmq:management
@@ -107,7 +117,10 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - shared-db
 
 networks:
-  default:
-    driver: bridge
+  shared-db:
+    external: true
+    name: shared-db

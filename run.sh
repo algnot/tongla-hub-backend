@@ -1,10 +1,10 @@
 #!/bin/bash
 
-echo "Waiting for MySQL to start..."
-until mysqladmin ping -h"$DATABASE_HOST" -u"$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" --port="$DATABASE_PORT" --silent; do
-    sleep 2
-done
-echo "MySQL is up and running!"
+# echo "Waiting for MySQL to start..."
+# until mysqladmin ping -h"$DATABASE_HOST" -u"$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" --port="$DATABASE_PORT" --silent; do
+#     sleep 2
+# done
+# echo "MySQL is up and running!"
 
 if [ "$SERVICE_NAME" = "tongla-hub-server" ]; then
     echo "Running Alembic migrations..."
